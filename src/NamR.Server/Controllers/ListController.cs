@@ -36,7 +36,7 @@ namespace NamR.Server.Controllers
             return res;
         }
 
-        [HttpDelete("item")]
+        [HttpDelete("item/{listItemId:Guid}")]
         public async Task<ActionResult> Remove(Guid listItemId)
         {
             await _context.Remove(listItemId);
