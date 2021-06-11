@@ -1,0 +1,29 @@
+﻿@page "/list/{ListId:guid}" 
+
+@using NamR.Shared; 
+@using NamR.Shared.Models; 
+@using System.Linq; 
+@inject ListClient ListClient
+
+<h3>List</h3>
+
+<div>
+    <ul>
+        @foreach (var item in items)
+        {
+            <li>@item.Name who is a @(item.IsGirl ? "girl" : "boy")</li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public Guid ListId { get; set; }
+
+    private List<ListItemModel> items { get; set; } = new List<ListItemModel>();
+
+    protected async override Task OnInitializedAsync()
+    {
+        items = (await ListClient.GetList(ListId)).ToList();
+    }
+}

@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.30114.105
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{60354AFD-33D9-4B0A-9A4A-81DECCA9FB74}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamR.Client", "src\NamR.Client\NamR.Client.csproj", "{FF903B92-66D0-4234-9320-EC9E82308703}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamR.Client", "src\NamR.Client\NamR.Client.csproj", "{FF903B92-66D0-4234-9320-EC9E82308703}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamR.Server", "src\NamR.Server\NamR.Server.csproj", "{BE30FFD9-8E27-4579-BF44-54C653DE5EC0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamR.Server", "src\NamR.Server\NamR.Server.csproj", "{BE30FFD9-8E27-4579-BF44-54C653DE5EC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NamR.Shared", "src\NamR.Shared\NamR.Shared.csproj", "{B4DC454C-B09F-4201-8030-0DF21D9E1B88}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NamR.Shared", "src\NamR.Shared\NamR.Shared.csproj", "{B4DC454C-B09F-4201-8030-0DF21D9E1B88}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,9 +19,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 		Release|x64 = Release|x64
 		Release|x86 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{FF903B92-66D0-4234-9320-EC9E82308703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -61,9 +58,15 @@ Global
 		{B4DC454C-B09F-4201-8030-0DF21D9E1B88}.Release|x86.ActiveCfg = Release|Any CPU
 		{B4DC454C-B09F-4201-8030-0DF21D9E1B88}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FF903B92-66D0-4234-9320-EC9E82308703} = {60354AFD-33D9-4B0A-9A4A-81DECCA9FB74}
 		{BE30FFD9-8E27-4579-BF44-54C653DE5EC0} = {60354AFD-33D9-4B0A-9A4A-81DECCA9FB74}
 		{B4DC454C-B09F-4201-8030-0DF21D9E1B88} = {60354AFD-33D9-4B0A-9A4A-81DECCA9FB74}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {780CE6B2-5A76-405B-BB16-F012C14577AB}
 	EndGlobalSection
 EndGlobal
