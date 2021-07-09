@@ -1,0 +1,15 @@
+﻿.ButtonGroup {
+    display: flex;
+}
+
+::deep .ButtonGroup-button:first-of-type {
+    border-radius: 5px 0 0 5px;
+}
+
+::deep .ButtonGroup-button:last-of-type {
+    border-radius: 0 5px 5px 0;
+}
+
+::deep .ButtonGroup-button--selected {
+    background-color: #fafafa;
+}

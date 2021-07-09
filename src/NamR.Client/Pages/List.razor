@@ -2,62 +2,53 @@
 
 @using NamR.Shared; 
 @using NamR.Shared.Models; 
-@using System.Linq; 
+@using System.Linq;
 @inject ListClient ListClient
 
-<h1>Min navneliste</h1>
+<NamR.Client.Components.Title TitleText="@GetTitle()" />
 
-<div>
-    <ul>
-        @foreach (var item in items)
-        {
-            <li>
-                @item.Name som er en @(item.IsGirl ? "jente" : "gutt")
-                <button @onclick="@(() => OnRemove(item))">Fjern</button>
-            </li>
-        }
-    </ul>
+<div class="@GetNameListsClassNames()">
+    <NamR.Client.Components.NameList
+        IsGirl="@true"
+        Items="@items"
+        RemoveOnClick="@OnRemove"
+    />
+    <NamR.Client.Components.NameList
+        IsGirl="@false"
+        Items="@items"
+        RemoveOnClick="@OnRemove"
+    />
 </div>
 
-<div>
-    <EditForm EditContext="@editContext" OnSubmit="@OnSubmit">
-        <label for="name-input">Navn</label>
-        <InputText id="name-input" @bind-Value="newItem.Name" />
-        <label for="is-girl-check">Jente?</label>
-        <InputCheckbox id="is-girl-check" @bind-Value="newItem.IsGirl" />
-        <button type="submit">Legg til navn</button>
-    </EditForm>
-</div>
+<NamR.Client.Components.AddNameForm ListId="@ListId" OnAdded="@AddItem" />
 
 @code {
     [Parameter]
     public Guid ListId { get; set; }
 
-    private NewListItemModel newItem = new NewListItemModel();
-    private EditContext editContext;
+    private string GetTitle() => items.Select(i => i.IsGirl).Distinct().Count() == 1
+        ? items.FirstOrDefault(i => i.IsGirl) != null ? "Min jentenavnliste" : "Min guttenavnliste"
+        : "Min navneliste";
     private List<ListItemModel> items { get; set; } = new List<ListItemModel>();
+    private string GetNameListsClassNames() =>
+        items.Select(i => i.IsGirl).Distinct().Count() == 1 ? "NameLists single" : "NameLists dual";
 
     protected async override Task OnInitializedAsync()
     {
-        editContext = new EditContext(newItem);
+        //editContext = new EditContext(newItem);
         items = (await ListClient.GetList(ListId)).ToList();
     }
 
-    private async Task OnSubmit()
+    private void AddItem(ListItemModel model)
     {
-        if (string.IsNullOrWhiteSpace(newItem.Name))
-        {
-            return;
-        }
-        newItem.ListIdentifier = ListId;
-        var result = await ListClient.AddItem(newItem);
-        newItem = new NewListItemModel();
-        items.Add(result);
+        items.Add(model);
+        StateHasChanged();
     }
 
     private async Task OnRemove(ListItemModel item)
     {
         items.Remove(item);
         await ListClient.RemoveItem(item.Id);
+        StateHasChanged();
     }
 }

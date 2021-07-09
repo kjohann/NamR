@@ -1,0 +1,19 @@
+﻿.AddNameForm {
+    padding: 15px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.AddNameForm-body {
+    flex-basis: 100%;
+}
+
+.AddNameForm-inputLine {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+.AddNameForm-inputLine .AddNameForm-nameInput {
+    flex-basis: 60%;
+}

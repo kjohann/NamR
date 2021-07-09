@@ -1,0 +1,36 @@
+﻿@using NamR.Shared.Models; 
+
+@if (HasItems())
+{
+    <div class="NameList">
+        @if (Items.Any(i => i.IsGirl == !IsGirl))
+        {
+            <h2>@GetTitle()</h2>
+        }
+        <ul>
+            @foreach (var item in Items.Where(i => i.IsGirl == IsGirl))
+            {
+                <li>
+                    @item.Name
+                    <button href="#" aria-label="Fjern" class="NameList-RemoveButton" @onclick="@(async () => await RemoveOnClick(item))"/>
+                </li>
+            }
+        </ul>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public bool IsGirl { get; set; }
+
+    [Parameter]
+    public List<ListItemModel> Items { get; set; }
+
+    private bool HasItems() => Items.Any(i => i.IsGirl == IsGirl);
+
+    private string GetTitle() => IsGirl ? "Jentenavn" : "Guttenavn";
+
+    [Parameter]
+    public Func<ListItemModel, Task> RemoveOnClick { get; set; }
+}

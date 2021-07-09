@@ -1,0 +1,96 @@
+﻿*, *:before, *:after {
+    box-sizing: border-box;
+}
+
+body, html {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f1f1f5;
+}
+
+.spinner {
+    width: 80px;
+    height: 80px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    background-color: #333;
+    animation: sk-rotateplane 1.2s infinite ease-in-out;
+}
+
+@keyframes sk-rotateplane {
+    0% {
+        transform: perspective(120px) rotateX(0deg) rotateY(0deg);
+        background-color: red;
+    }
+
+    50% {
+        transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
+        background-color: green;
+    }
+
+    100% {
+        transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
+        background-color: blue;
+    }
+}
+
+label > span {
+    text-decoration: underline;
+    font-size: 0.8em;
+}
+
+button {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #33333315;
+    position: relative;
+    border: 1px solid #3333334f;
+    text-align: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #fafafa
+}
+
+input[type=text] {
+    display: block;
+    margin: 0;
+    padding: 0.5rem;
+    border: 0;
+    border-bottom: 1px solid #313131;
+    background-color: inherit;
+    outline: none;
+    width: 100%;
+    font-size: 1.3rem;
+}
+
+input[type=text]:focus {
+    box-shadow: 0 0 15px 4px rgba(0,0,0,0.06);
+    border: 0;
+    border-bottom: 1px solid #313131;
+}
+
+#blazor-error-ui {
+    background: lightyellow;
+    bottom: 0;
+    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+    }

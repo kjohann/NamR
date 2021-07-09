@@ -1,0 +1,11 @@
+﻿.NameLists {
+    display: flex;
+}
+
+.NameLists.dual {
+
+}
+
+.NameLists.single {
+    justify-content: center;
+}

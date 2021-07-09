@@ -2,10 +2,11 @@
 
 namespace NamR.Shared.Models
 {
-    public class NewListItemModel
+    public record NewListItemModel
     {
         public Guid ListIdentifier { get; set; }
         public string Name { get; set; }
-        public bool IsGirl { get; set; }
+        public bool IsGirl => Gender == Gender.Girl;
+        public Gender Gender { get; set; }
     }
 }

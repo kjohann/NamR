@@ -1,0 +1,64 @@
+﻿@using NamR.Shared; 
+@using NamR.Shared.Models; 
+@inject ListClient ListClient
+
+<div class="AddNameForm">
+    <div class="AddNameForm-body">
+        <h3>Legg til nytt navn</h3>
+        <EditForm EditContext="@editContext" OnSubmit="@OnSubmit">
+            <div class="AddNameForm-inputLine">
+                <label class="AddNameForm-nameInput" for="name-input">
+                    <span>Navn</span>
+                    <InputText 
+                        class="AddNameForm-input"
+                        type="text"
+                        id="name-input" 
+                        @bind-Value="newItem.Name" 
+                    />
+                </label>
+                <NamR.Client.Components.ButtonGroup>
+                    <button class="@(GetSelectButtonClass(Gender.Boy))" type="button" @onclick="@(() => OnGenderSelected(Gender.Boy))">Guttenavn</button>
+                    <button class="@(GetSelectButtonClass(Gender.Girl))" type="button" @onclick="@(() => OnGenderSelected(Gender.Girl))">Jentenavn</button>                    
+                </NamR.Client.Components.ButtonGroup>
+            </div>
+            <button type="submit">@GetButtonText()</button>
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public Guid ListId { get; set; }
+
+    [Parameter]
+    public Action<ListItemModel> OnAdded { get; set; }
+
+    private NewListItemModel newItem = new NewListItemModel();
+    private EditContext editContext;
+    private string GetButtonText() => newItem.Gender == Gender.Boy ? "Legg til guttenavn" : "Legg til jentenavn";
+    private string GetSelectButtonClass(Gender gender) => newItem.Gender == gender ? "ButtonGroup-button ButtonGroup-button--selected" : "ButtonGroup-button";
+
+    protected override Task OnInitializedAsync()
+    {
+        editContext = new EditContext(newItem);
+        return Task.CompletedTask;
+    }
+
+    private void OnGenderSelected(Gender gender)
+    {
+        newItem = newItem with { Gender = gender };
+        StateHasChanged();
+    }
+
+    private async Task OnSubmit()
+    {
+        if (string.IsNullOrWhiteSpace(newItem.Name))
+        {
+            return;
+        }
+        newItem = newItem with { ListIdentifier = ListId };
+        var result = await ListClient.AddItem(newItem);
+        newItem = new NewListItemModel() with { Gender = newItem.Gender };
+        OnAdded(result);
+    }
+}

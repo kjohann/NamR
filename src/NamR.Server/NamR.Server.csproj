@@ -19,5 +19,4 @@
     <ProjectReference Include="..\NamR.Shared\NamR.Shared.csproj" />
   </ItemGroup>
 
-
 </Project>
