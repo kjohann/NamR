@@ -43,6 +43,25 @@ label > span {
     font-size: 0.8em;
 }
 
+a {
+    text-decoration: none;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    text-align: left;
+    color: #262626;
+    border-bottom: .125rem solid #262626;
+    font-weight: 500;
+    cursor: pointer;
+    background-image: none;
+    font-size: 1.3rem;
+}
+
+a:hover {
+    color: #c1c1c1;
+    border-color: #c1c1c1;
+}
+
 button {
     padding: 10px;
     border-radius: 5px;

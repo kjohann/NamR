@@ -1,11 +1,13 @@
 ﻿@page "/"
+@using NamR.Shared
 @inject NavigationManager NavigationManager
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 
-@code { 
-    
-    protected override void OnInitialized()
+@code {
+    protected async override Task OnInitializedAsync()
     {
-        NavigationManager.NavigateTo($"/list/{Guid.NewGuid()}");
+        var listId = await localStorage.GetItemAsync<Guid?>(Constants.ListIdLocalStorageKey) ?? Guid.NewGuid();
+        NavigationManager.NavigateTo($"/list/{listId}");
     }
 }

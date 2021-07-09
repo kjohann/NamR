@@ -4,8 +4,17 @@
 @using NamR.Shared.Models; 
 @using System.Linq;
 @inject ListClient ListClient
+@inject ClipBoardHandler clipBoardHandler
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <NamR.Client.Components.Title TitleText="@GetTitle()" />
+
+<div class="List-operations">
+    <NavLink href="@($"list/{Guid.NewGuid()}")">Lag ny liste</NavLink>
+    <button class="LinkButton" @onclick="@KopierOnClick">
+        Kopier din listeId
+    </button>
+</div>
 
 <div class="@GetNameListsClassNames()">
     <NamR.Client.Components.NameList
@@ -26,6 +35,11 @@
     [Parameter]
     public Guid ListId { get; set; }
 
+    private async Task KopierOnClick()
+    {
+        await clipBoardHandler.WriteTextAsync(ListId.ToString());
+    }
+
     private string GetTitle() => items.Select(i => i.IsGirl).Distinct().Count() == 1
         ? items.FirstOrDefault(i => i.IsGirl) != null ? "Min jentenavnliste" : "Min guttenavnliste"
         : "Min navneliste";
@@ -33,9 +47,9 @@
     private string GetNameListsClassNames() =>
         items.Select(i => i.IsGirl).Distinct().Count() == 1 ? "NameLists single" : "NameLists dual";
 
-    protected async override Task OnInitializedAsync()
+    protected async override Task OnParametersSetAsync()
     {
-        //editContext = new EditContext(newItem);
+        await localStorage.SetItemAsync(Constants.ListIdLocalStorageKey, ListId);
         items = (await ListClient.GetList(ListId)).ToList();
     }
 

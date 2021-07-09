@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using NamR.Shared;
@@ -13,6 +14,9 @@ namespace NamR.Client
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            builder.Services.AddBlazoredLocalStorage();
+
+            builder.Services.AddScoped<ClipBoardHandler>();
             builder.Services.AddHttpClient<ListClient>(c => c.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             await builder.Build().RunAsync();
