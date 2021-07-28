@@ -2,7 +2,7 @@
 
 namespace NamR.Shared.Models
 {
-    public class CompareListItemModel
+    public class CompareListItemModel : IListItemModel
     {
         public Guid Id { get; set; }
         public Guid CompareListIdentifier { get; set; }

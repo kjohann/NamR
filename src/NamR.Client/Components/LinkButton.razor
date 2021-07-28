@@ -1,0 +1,11 @@
+﻿<button class="LinkButton" @onclick="@OnClick">
+    @ButtonText
+</button>
+
+@code {
+    [Parameter]
+    public Func<Task> OnClick { get; set; } = default!;
+
+    [Parameter]
+    public string ButtonText { get; set; } = default!;
+}

@@ -1,0 +1,7 @@
+﻿h2 {
+    text-align: center;
+}
+
+h2:last-of-type {
+    margin-top: 3rem;
+}

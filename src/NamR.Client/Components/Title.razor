@@ -1,6 +1,23 @@
-﻿<h1 class="Title">@TitleText</h1>
+﻿@using NamR.Shared
 
-@code {
+@inject ClipBoardHandler clipBoardHandler
+
+<h1 class="Title">@TitleText</h1>
+
+<div class="Title-actionBar">
+    <NavLink href="@($"list/{Guid.NewGuid()}")">Lag ny liste</NavLink>
+    <NamR.Client.Components.LinkButton OnClick="@KopierOnClick" ButtonText="Kopier din listeId" />
+</div>
+
+@code { 
     [Parameter]
-    public string TitleText { get; set; }
+    public Guid ListId { get; set; }
+
+    [Parameter]
+    public string TitleText { get; set; } = default!;
+
+    private async Task KopierOnClick()
+    {
+        await clipBoardHandler.WriteTextAsync(ListId.ToString());
+    }
 }

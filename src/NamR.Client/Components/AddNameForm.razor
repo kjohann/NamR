@@ -31,10 +31,10 @@
     public Guid ListId { get; set; }
 
     [Parameter]
-    public Action<ListItemModel> OnAdded { get; set; }
+    public Action<ListItemModel> OnAdded { get; set; } = default!;
 
     private NewListItemModel newItem = new NewListItemModel();
-    private EditContext editContext;
+    private EditContext editContext = default!;
     private string GetButtonText() => newItem.Gender == Gender.Boy ? "Legg til guttenavn" : "Legg til jentenavn";
     private string GetSelectButtonClass(Gender gender) => newItem.Gender == gender ? "ButtonGroup-button ButtonGroup-button--selected" : "ButtonGroup-button";
 

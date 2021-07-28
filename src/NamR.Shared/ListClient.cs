@@ -25,7 +25,7 @@ namespace NamR.Shared
 
         public async Task<IEnumerable<CompareListItemModel>> GetListForComparing(Guid compareId)
         {
-            return await _client.GetFromJsonAsync<IEnumerable<CompareListItemModel>>($"api/list/compare/${compareId}");
+            return await _client.GetFromJsonAsync<IEnumerable<CompareListItemModel>>($"api/list/compare/{compareId}");
         }
 
         public async Task<ListItemModel> AddItem(NewListItemModel item)

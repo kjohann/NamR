@@ -1,0 +1,83 @@
+﻿@page "/compare/{ListId:guid}/{CompareId:guid}" 
+
+@using NamR.Shared; 
+@using NamR.Shared.Models; 
+@using System.Linq;
+@inject ListClient ListClient
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<NamR.Client.Components.Title TitleText="Sammenlign lister" />
+
+@if (myItems.Any(i => i.IsGirl) && HasComparisons(true))
+{
+    <h2>Jentenavn</h2>
+    <div class="u--flex @GetNameListsClassNames(true)">
+        <NamR.Client.Components.NameList
+            TListModel=ListItemModel
+            IsGirl="@true"
+            Items="@myItems"
+            GetListIcon="@GetListIcon"
+        />
+        <NamR.Client.Components.NameList
+            TListModel=CompareListItemModel
+            IsGirl="@true"
+            ItemClass="NameList--faded"
+            Items="@comparingItems"
+        />
+    </div>        
+}
+
+@if (myItems.Any(i => !i.IsGirl) && HasComparisons(false))
+{
+    <h2>Guttenavn</h2>
+    <div class="u--flex @GetNameListsClassNames(false)">
+        <NamR.Client.Components.NameList
+            TListModel=ListItemModel
+            IsGirl="@false"
+            Items="@myItems"
+            GetListIcon="@GetListIcon"
+        />
+        <NamR.Client.Components.NameList
+            TListModel=CompareListItemModel
+            IsGirl="@false"
+            ItemClass="NameList--faded"
+            Items="@comparingItems"
+        />
+    </div>        
+}
+
+@code {
+    [Parameter]
+    public Guid ListId { get; set; }
+    [Parameter]
+    public Guid CompareId { get; set; }
+
+    private List<ListItemModel> myItems { get; set; } = new List<ListItemModel>();
+    private List<CompareListItemModel> comparingItems { get; set; } = new List<CompareListItemModel>();
+
+    private string GetNameListsClassNames(bool isGirl)
+    {
+        var hasAny = myItems.Any(i => i.IsGirl == isGirl);
+        if (hasAny)
+        {
+            return HasComparisons(isGirl)
+                ? string.Empty
+                : "u--flexcentered";
+        }
+
+        return "u--flexcentered";
+    }
+
+    private string GetListIcon(ListItemModel item) => comparingItems.Any(i => i.Name == item.Name)
+        ? "😍"
+        : string.Empty;
+
+    private bool HasComparisons(bool isGirl) => comparingItems.Any(i => i.IsGirl == isGirl);
+
+    protected async override Task OnParametersSetAsync()
+    {
+        await localStorage.SetItemAsync(Constants.CompareIdLocalStorageKey, CompareId);
+        myItems = (await ListClient.GetList(ListId)).OrderBy(i => i.Name).ToList();
+        comparingItems = (await ListClient.GetListForComparing(CompareId)).OrderBy(i => i.Name).ToList();
+    }
+}

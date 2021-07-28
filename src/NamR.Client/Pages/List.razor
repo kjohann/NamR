@@ -4,27 +4,23 @@
 @using NamR.Shared.Models; 
 @using System.Linq;
 @inject ListClient ListClient
-@inject ClipBoardHandler clipBoardHandler
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
 <NamR.Client.Components.Title TitleText="@GetTitle()" />
 
-<div class="List-operations">
-    <NavLink href="@($"list/{Guid.NewGuid()}")">Lag ny liste</NavLink>
-    <button class="LinkButton" @onclick="@KopierOnClick">
-        Kopier din listeId
-    </button>
-</div>
-
-<div class="@GetNameListsClassNames()">
+<div class="u--flex @GetNameListsClassNames()">
     <NamR.Client.Components.NameList
+        TListModel=ListItemModel
         IsGirl="@true"
         Items="@items"
+        Title="Jentenavn"
         RemoveOnClick="@OnRemove"
     />
     <NamR.Client.Components.NameList
+        TListModel=ListItemModel
         IsGirl="@false"
         Items="@items"
+        Title="Guttenavn"
         RemoveOnClick="@OnRemove"
     />
 </div>
@@ -35,17 +31,13 @@
     [Parameter]
     public Guid ListId { get; set; }
 
-    private async Task KopierOnClick()
-    {
-        await clipBoardHandler.WriteTextAsync(ListId.ToString());
-    }
+    private List<ListItemModel> items { get; set; } = new List<ListItemModel>();
 
     private string GetTitle() => items.Select(i => i.IsGirl).Distinct().Count() == 1
         ? items.FirstOrDefault(i => i.IsGirl) != null ? "Min jentenavnliste" : "Min guttenavnliste"
         : "Min navneliste";
-    private List<ListItemModel> items { get; set; } = new List<ListItemModel>();
     private string GetNameListsClassNames() =>
-        items.Select(i => i.IsGirl).Distinct().Count() == 1 ? "NameLists single" : "NameLists dual";
+        items.Select(i => i.IsGirl).Distinct().Count() == 1 ? "u--flexcentered" : string.Empty;
 
     protected async override Task OnParametersSetAsync()
     {
@@ -59,10 +51,11 @@
         StateHasChanged();
     }
 
-    private async Task OnRemove(ListItemModel item)
+    private async Task OnRemove(IListItemModel item)
     {
-        items.Remove(item);
-        await ListClient.RemoveItem(item.ListIdentifier, item.Id);
+        var actualItem = (ListItemModel)item;
+        items.Remove(actualItem);
+        await ListClient.RemoveItem(actualItem.ListIdentifier, actualItem.Id);
         StateHasChanged();
     }
 }

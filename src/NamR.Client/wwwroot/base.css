@@ -95,6 +95,14 @@ input[type=text]:focus {
     border-bottom: 1px solid #313131;
 }
 
+.u--flex {
+    display: flex;
+}
+
+.u--flexcentered {
+    justify-content: center;
+}
+
 #blazor-error-ui {
     background: lightyellow;
     bottom: 0;
@@ -107,9 +115,9 @@ input[type=text]:focus {
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
-    }
+#blazor-error-ui .dismiss {
+    cursor: pointer;
+    position: absolute;
+    right: 0.75rem;
+    top: 0.5rem;
+}
