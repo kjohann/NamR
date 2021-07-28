@@ -20,8 +20,12 @@ namespace NamR.Shared
 
         public async Task<IEnumerable<ListItemModel>> GetList(Guid listId)
         {
-            var res = await _client.GetFromJsonAsync<IEnumerable<ListItemModel>>($"api/list/{listId}");
-            return res;
+            return await _client.GetFromJsonAsync<IEnumerable<ListItemModel>>($"api/list/{listId}");
+        }
+
+        public async Task<IEnumerable<CompareListItemModel>> GetListForComparing(Guid compareId)
+        {
+            return await _client.GetFromJsonAsync<IEnumerable<CompareListItemModel>>($"api/list/compare/${compareId}");
         }
 
         public async Task<ListItemModel> AddItem(NewListItemModel item)
@@ -34,9 +38,9 @@ namespace NamR.Shared
             return await res.Content.ReadFromJsonAsync<ListItemModel>();
         }
 
-        public async Task RemoveItem(Guid listItemId)
+        public async Task RemoveItem(Guid listId, Guid listItemId)
         {
-            var res = await _client.DeleteAsync($"api/list/item/{listItemId}");
+            var res = await _client.DeleteAsync($"api/list/{listId}/item/{listItemId}");
             // TODO: have fun
             res.EnsureSuccessStatusCode();
         }

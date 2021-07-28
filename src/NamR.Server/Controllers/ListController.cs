@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace NamR.Server.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/list")]
     [ApiController]
     public class ListController : ControllerBase
     {
@@ -36,12 +36,11 @@ namespace NamR.Server.Controllers
             return res;
         }
 
-        [HttpDelete("item/{listItemId:Guid}")]
-        public async Task<ActionResult> Remove(Guid listItemId)
+        [HttpDelete("{listId:Guid}/item/{listItemId:Guid}")]
+        public async Task<ActionResult> Remove(Guid listId, Guid listItemId)
         {
-            await _context.Remove(listItemId);
+            await _context.Remove(listId, listItemId);
             return NoContent();
         }
-
     }
 }

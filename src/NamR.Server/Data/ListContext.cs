@@ -20,6 +20,8 @@ namespace NamR.Server.Data
 
         public IEnumerable<ListItemModel> GetList(Guid listIdentifier) => GetAllListItems(listIdentifier).Select(l => l.ToModel());
 
+        public IEnumerable<CompareListItemModel> GetListForComparing(Guid compareListIdentifier) => ListItems.Where(l => l.CompareListIdentifier == compareListIdentifier).Select(i => i.ToComparemodel());
+
         public IQueryable<ListItem> GetAllListItems(Guid listIdentifier) => ListItems.Where(l => l.ListIdentifier == listIdentifier);
 
         public async Task<ListItemModel> Add(NewListItemModel item)
@@ -30,6 +32,7 @@ namespace NamR.Server.Data
 
         public async Task<ListItem> AddItem(ListItem item)
         {
+            item.CompareListIdentifier = await GetCompareIdentifier(item.ListIdentifier);
             var res = await ListItems.AddAsync(item);
 
             await SaveChangesAsync();
@@ -37,9 +40,9 @@ namespace NamR.Server.Data
             return res.Entity;
         }
 
-        public async Task Remove(Guid externalId)
+        public async Task Remove(Guid listId, Guid externalId)
         {
-            var entity = await ListItems.SingleOrDefaultAsync(l => l.ExternalId == externalId);
+            var entity = await ListItems.SingleOrDefaultAsync(l => l.ListIdentifier == listId && l.ExternalId == externalId);
 
             if (entity == null)
             {
@@ -49,5 +52,8 @@ namespace NamR.Server.Data
             ListItems.Remove(entity);
             await SaveChangesAsync();
         }
+
+        private async Task<Guid> GetCompareIdentifier(Guid listIdentifier) =>
+            (await ListItems.FirstOrDefaultAsync(i => i.ListIdentifier == listIdentifier))?.CompareListIdentifier ?? Guid.NewGuid();
     }
 }

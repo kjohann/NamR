@@ -62,7 +62,7 @@
     private async Task OnRemove(ListItemModel item)
     {
         items.Remove(item);
-        await ListClient.RemoveItem(item.Id);
+        await ListClient.RemoveItem(item.ListIdentifier, item.Id);
         StateHasChanged();
     }
 }
