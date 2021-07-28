@@ -1,13 +1,92 @@
 ﻿@page "/"
 @using NamR.Shared
 @inject NavigationManager NavigationManager
-@inject Blazored.LocalStorage.ILocalStorageService localStorage
+@inject Blazored.LocalStorage.ILocalStorageService LocalStorage
+@inject ClipBoardHandler ClipBoardHandler
+@inject ListClient ListClient;
+
+<NamR.Client.Components.Title TitleText="Velkommen til NamR!" ShowActionBar="@false" />
+
+<div class="Content">
+    @if (ListId.HasValue)
+    {
+        <p>
+            Med NamR kan du <NavLink href="@($"list/{ListId}")">se din egen liste</NavLink>,
+            eller <NavLink href="@($"list/{Guid.NewGuid()}")">opprette en ny.</NavLink>
+        </p>
+        <p>
+            Om du vil ta med deg din liste til en annen enhet,
+            <NamR.Client.Components.LinkButton
+                ButtonText=" trykker du her "
+                OnClick="@KopierMyListLinkOnClick"
+            />
+            for å kopiere lenken til din liste (eller marker og kopier herfra: @GetMyListLink()).
+        </p>
+        <p>
+            Du kan også sammenligne listen din med en partners liste.
+            Skriv inn partners sammenlignings-ID i feltet under og trykk på knappen for å sammenligne.
+            For at partner skal kunne sammenligne med deg,
+            <NamR.Client.Components.LinkButton
+                ButtonText=" trykker du her"
+                OnClick="@KopierCompareIdOnClick"
+            />
+            for å kopiere delings-ID'en for din liste (eller marker og kopier herfra: @CompareListId).
+        </p>
+        <div>
+            <label for="compare-input">
+                <span>Partners delings-ID</span>
+                <input 
+                    class="AddNameForm-input"
+                    type="text"
+                    id="compare-input" 
+                    @bind="compareIdInput" 
+                />
+            </label>
+            <button class="CompareButton" @onclick="@OnCompareClick">Sammenlign!</button>
+        </div>
+    }
+    else
+    {
+        <NavLink href="@($"list/{Guid.NewGuid()}")">Opprett en liste for å komme i gang!</NavLink>               
+    }
+</div>
+
 
 
 @code {
+    private Guid? ListId;
+    private Guid? CompareListId;
+
+    private string? compareIdInput;
+
     protected async override Task OnInitializedAsync()
     {
-        var listId = await localStorage.GetItemAsync<Guid?>(Constants.ListIdLocalStorageKey) ?? Guid.NewGuid();
-        NavigationManager.NavigateTo($"/list/{listId}");
+        ListId = await LocalStorage.GetItemAsync<Guid?>(Constants.ListIdLocalStorageKey);
+        compareIdInput = (await LocalStorage.GetItemAsync<Guid?>(Constants.CompareIdLocalStorageKey))?.ToString();
+        if (ListId.HasValue)
+        {
+            CompareListId = (await ListClient.GetList(ListId.Value)).FirstOrDefault()?.CompareListIdentifier;
+        }
+    }
+
+    private string GetMyListLink() => $"{NavigationManager.BaseUri}list/{ListId}";
+
+    private async Task KopierMyListLinkOnClick()
+    {
+        await ClipBoardHandler.WriteTextAsync(GetMyListLink());
+    }
+
+    private async Task KopierCompareIdOnClick()
+    {
+        await ClipBoardHandler.WriteTextAsync(CompareListId.ToString());
+    }
+
+    private Task OnCompareClick()
+    {
+        if(Guid.TryParse(compareIdInput, out var compareId))
+        {
+            NavigationManager.NavigateTo($"/compare/{ListId}/{compareId}");
+        }
+        return Task.CompletedTask;
     }
 }
