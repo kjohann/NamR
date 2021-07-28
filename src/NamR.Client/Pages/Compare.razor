@@ -17,6 +17,7 @@
             IsGirl="@true"
             Items="@myItems"
             GetListIcon="@GetListIcon"
+            RemoveOnClick="@OnRemove"
         />
         <NamR.Client.Components.NameList
             TListModel=CompareListItemModel
@@ -36,6 +37,7 @@
             IsGirl="@false"
             Items="@myItems"
             GetListIcon="@GetListIcon"
+            RemoveOnClick="@OnRemove"
         />
         <NamR.Client.Components.NameList
             TListModel=CompareListItemModel
@@ -45,6 +47,8 @@
         />
     </div>        
 }
+
+<NamR.Client.Components.AddNameForm ListId="@ListId" OnAdded="@AddItem" />
 
 @code {
     [Parameter]
@@ -73,6 +77,20 @@
         : string.Empty;
 
     private bool HasComparisons(bool isGirl) => comparingItems.Any(i => i.IsGirl == isGirl);
+
+    private void AddItem(ListItemModel model)
+    {
+        myItems.Add(model);
+        StateHasChanged();
+    }
+
+    private async Task OnRemove(IListItemModel item)
+    {
+        var actualItem = (ListItemModel)item;
+        myItems.Remove(actualItem);
+        await ListClient.RemoveItem(actualItem.ListIdentifier, actualItem.Id);
+        StateHasChanged();
+    }
 
     protected async override Task OnParametersSetAsync()
     {
