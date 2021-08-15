@@ -1,11 +1,8 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Linq;
 using NamR.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -31,12 +28,28 @@ namespace NamR.Server
                     opts.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
             services.AddRazorPages();
-            services.AddDbContext<ListContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
+            var dbUrl = Configuration["DATABASE_URL"];
+            if (dbUrl != null)
+            {
+                var builder = new PostgreSqlConnectionStringBuilder(dbUrl)
+                {
+                    Pooling = true,
+                    TrustServerCertificate = true,
+                    SslMode = SslMode.Require
+                };
+
+                services.AddDbContext<ListContext>(options => options.UseNpgsql(builder.ConnectionString));
+            }
+            else
+            {
+                services.AddDbContext<ListContext>(options => options.UseNpgsql(Configuration.GetConnectionString("Default")));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ListContext listContext)
         {
+            listContext.Database.Migrate();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -45,7 +58,6 @@ namespace NamR.Server
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
                 app.UseHttpsRedirection();
             }

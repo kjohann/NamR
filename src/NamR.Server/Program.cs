@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -20,6 +21,15 @@ namespace NamR.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    var portEnv = Environment.GetEnvironmentVariable("PORT");
+                    if (portEnv != null)
+                    {
+                        webBuilder.ConfigureKestrel(serverOptions =>
+                        {
+                            serverOptions.Listen(IPAddress.Any, Convert.ToInt32(portEnv));
+                        });
+                    }
+                    
                     webBuilder.UseStartup<Startup>();
                 });
     }

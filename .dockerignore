@@ -1,0 +1,12 @@
+**/.env
+**/.git/
+**/.gitignore
+**/.vs/
+**/.vscode/
+**/.idea/
+**/*.*proj.user
+**/bin/
+**/Dockerfile*
+**/obj/
+LICENSE
+README.md
