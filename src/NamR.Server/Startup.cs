@@ -6,6 +6,8 @@ using Microsoft.Extensions.Hosting;
 using NamR.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Rewrite;
 
 namespace NamR.Server
 {
@@ -58,8 +60,16 @@ namespace NamR.Server
             else
             {
                 app.UseExceptionHandler("/Error");
-                app.UseHsts();
-                app.UseHttpsRedirection();
+                var forwardedHeadersOptions = new ForwardedHeadersOptions
+                {
+                    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+                };
+                forwardedHeadersOptions.KnownNetworks.Clear();
+                forwardedHeadersOptions.KnownProxies.Clear();
+                app.UseForwardedHeaders(forwardedHeadersOptions);
+
+                var rewriteOptions = new RewriteOptions().AddRedirectToHttps(307);
+                app.UseRewriter(rewriteOptions);
             }
 
             app.UseBlazorFrameworkFiles();
