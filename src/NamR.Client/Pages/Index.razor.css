@@ -1,6 +1,6 @@
 ﻿.Content {
     font-size: 1.3rem;
-    padding: 0 7.5rem;
+    word-break: break-word;
 }
 
 .CompareButton {

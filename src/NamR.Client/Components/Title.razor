@@ -5,8 +5,11 @@
 @if (ShowActionBar)
 {
     <div class="Title-actionBar">
-        <NavLink href="@($"list/{Guid.NewGuid()}")">Lag ny liste</NavLink>
-        <NavLink href="@($"/")">Hjem</NavLink>
+        <NavLink href="@($"/")">Info og hjelp</NavLink>
+        @if (AdditionalLinkHref != null && AdditionalLinkText != null)
+        {
+            <NavLink href="@AdditionalLinkHref">@AdditionalLinkText</NavLink>            
+        }
     </div>
 }
 
@@ -19,4 +22,10 @@
 
     [Parameter]
     public bool ShowActionBar { get; set; } = true;
+
+    [Parameter]
+    public string? AdditionalLinkText { get; set; }
+
+    [Parameter]
+    public string? AdditionalLinkHref { get; set; }
 }

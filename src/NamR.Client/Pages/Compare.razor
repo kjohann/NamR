@@ -6,7 +6,11 @@
 @inject ListClient ListClient
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<NamR.Client.Components.Title TitleText="Sammenlign lister" />
+<NamR.Client.Components.Title 
+    TitleText="Sammenlign lister"
+    AdditionalLinkHref="@($"/list/{ListId}")"
+    AdditionalLinkText="Din liste"
+/>
 
 @if (myItems.Any(i => i.IsGirl) && HasComparisons(true))
 {

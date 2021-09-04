@@ -6,7 +6,11 @@
 @inject ListClient ListClient
 @inject Blazored.LocalStorage.ILocalStorageService localStorage
 
-<NamR.Client.Components.Title TitleText="@GetTitle()" />
+<NamR.Client.Components.Title 
+    TitleText="@GetTitle()"
+    AdditionalLinkHref="@comparePageHref"
+    AdditionalLinkText="Sammenlign lister"
+/>
 
 <div class="u--flex @GetNameListsClassNames()">
     <NamR.Client.Components.NameList
@@ -31,6 +35,8 @@
     [Parameter]
     public Guid ListId { get; set; }
 
+    private string? comparePageHref;
+
     private List<ListItemModel> items { get; set; } = new List<ListItemModel>();
 
     private string GetTitle() => items.Select(i => i.IsGirl).Distinct().Count() == 1
@@ -43,6 +49,11 @@
     {
         await localStorage.SetItemAsync(Constants.ListIdLocalStorageKey, ListId);
         items = (await ListClient.GetList(ListId)).ToList();
+        var compareId = await localStorage.GetItemAsync<Guid?>(Constants.CompareIdLocalStorageKey);
+        if (compareId.HasValue)
+        {
+            comparePageHref = $"/compare/{ListId}/{compareId}";
+        }
     }
 
     private void AddItem(ListItemModel model)

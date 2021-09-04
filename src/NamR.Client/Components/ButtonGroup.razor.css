@@ -1,5 +1,6 @@
 ﻿.ButtonGroup {
     display: flex;
+    width: 100%;
 }
 
 ::deep .ButtonGroup-button:first-of-type {

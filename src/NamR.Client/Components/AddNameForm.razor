@@ -3,27 +3,28 @@
 @inject ListClient ListClient
 
 <div class="AddNameForm">
-    <div class="AddNameForm-body">
-        <h3>Legg til nytt navn</h3>
-        <EditForm EditContext="@editContext" OnSubmit="@OnSubmit">
-            <div class="AddNameForm-inputLine">
-                <label class="AddNameForm-nameInput" for="name-input">
-                    <span>Navn</span>
-                    <InputText 
-                        class="AddNameForm-input"
-                        type="text"
-                        id="name-input" 
-                        @bind-Value="newItem.Name" 
-                    />
-                </label>
-                <NamR.Client.Components.ButtonGroup>
-                    <button class="@(GetSelectButtonClass(Gender.Boy))" type="button" @onclick="@(() => OnGenderSelected(Gender.Boy))">Guttenavn</button>
-                    <button class="@(GetSelectButtonClass(Gender.Girl))" type="button" @onclick="@(() => OnGenderSelected(Gender.Girl))">Jentenavn</button>                    
-                </NamR.Client.Components.ButtonGroup>
-            </div>
-            <button type="submit">@GetButtonText()</button>
-        </EditForm>
-    </div>
+    <h3>Legg til navn</h3>
+    <EditForm EditContext="@editContext" OnSubmit="@OnSubmit">
+        <div class="AddNameForm-inputLine">
+            <label class="AddNameForm-nameInput" for="name-input">
+                <span>Navn</span>
+                <InputText 
+                    placeholder="@GetPlaceholderText()"
+                    class="AddNameForm-input"
+                    type="text"
+                    id="name-input" 
+                    @bind-Value="newItem.Name" 
+                />
+            </label>
+        </div>
+        <div class="AddNameForm-inputLine">
+            <NamR.Client.Components.ButtonGroup>
+                <button class="@(GetSelectButtonClass(Gender.Boy))" type="button" @onclick="@(() => OnGenderSelected(Gender.Boy))">Guttenavn</button>
+                <button class="@(GetSelectButtonClass(Gender.Girl))" type="button" @onclick="@(() => OnGenderSelected(Gender.Girl))">Jentenavn</button>                    
+            </NamR.Client.Components.ButtonGroup>
+        </div>
+        <button type="submit">@GetButtonText()</button>
+    </EditForm>
 </div>
 
 @code {
@@ -36,6 +37,7 @@
     private NewListItemModel newItem = new NewListItemModel();
     private EditContext editContext = default!;
     private string GetButtonText() => newItem.Gender == Gender.Boy ? "Legg til guttenavn" : "Legg til jentenavn";
+    private string GetPlaceholderText() => newItem.Gender == Gender.Boy ? "Skriv inn guttenavn" : "Skriv inn jentenavn";
     private string GetSelectButtonClass(Gender gender) => newItem.Gender == gender ? "ButtonGroup-button ButtonGroup-button--selected" : "ButtonGroup-button";
 
     protected override Task OnInitializedAsync()

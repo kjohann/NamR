@@ -71,6 +71,7 @@ button {
     text-align: center;
     font-size: 1.3rem;
     cursor: pointer;
+    flex-basis: 50%;
 }
 
 button:hover {
@@ -97,6 +98,7 @@ input[type=text]:focus {
 
 .u--flex {
     display: flex;
+    gap: 0.5rem;
 }
 
 .u--flexcentered {

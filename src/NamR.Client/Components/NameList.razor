@@ -7,7 +7,7 @@
     <div class="NameList">
         @if (Items.Any(i => i.IsGirl == !IsGirl) && Title != null)
         {
-            <h2>@Title</h2>
+            <h2 class="NameList-title">@Title</h2>
         }
         <ul>
             @foreach (var item in Items.Where(i => i.IsGirl == IsGirl))
