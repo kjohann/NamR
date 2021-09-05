@@ -12,14 +12,14 @@
     AdditionalLinkText="Din liste"
 />
 
-@if (myItems.Any(i => i.IsGirl) && HasComparisons(true))
+@if (myItemsLookup.Values.Any(i => i.IsGirl) && HasComparisons(true))
 {
     <h2>Jentenavn</h2>
     <div class="u--flex @GetNameListsClassNames(true)">
         <NamR.Client.Components.NameList
             TListModel=ListItemModel
             IsGirl="@true"
-            Items="@myItems"
+            Items="@(GetMyItems())"
             GetListIcon="@GetListIcon"
             RemoveOnClick="@OnRemove"
         />
@@ -27,19 +27,18 @@
             TListModel=CompareListItemModel
             IsGirl="@true"
             ItemClass="NameList--faded"
-            Items="@comparingItems"
+            Items="@(GetComparingItems())"
         />
-    </div>        
-}
+    </div> }
 
-@if (myItems.Any(i => !i.IsGirl) && HasComparisons(false))
+@if (myItemsLookup.Values.Any(i => !i.IsGirl) && HasComparisons(false))
 {
     <h2>Guttenavn</h2>
     <div class="u--flex @GetNameListsClassNames(false)">
         <NamR.Client.Components.NameList
             TListModel=ListItemModel
             IsGirl="@false"
-            Items="@myItems"
+            Items="@(GetMyItems())"
             GetListIcon="@GetListIcon"
             RemoveOnClick="@OnRemove"
         />
@@ -47,10 +46,9 @@
             TListModel=CompareListItemModel
             IsGirl="@false"
             ItemClass="NameList--faded"
-            Items="@comparingItems"
+            Items="@(GetComparingItems())"
         />
-    </div>        
-}
+    </div> }
 
 <NamR.Client.Components.AddNameForm ListId="@ListId" OnAdded="@AddItem" />
 
@@ -60,12 +58,12 @@
     [Parameter]
     public Guid CompareId { get; set; }
 
-    private List<ListItemModel> myItems { get; set; } = new List<ListItemModel>();
-    private List<CompareListItemModel> comparingItems { get; set; } = new List<CompareListItemModel>();
+    private Dictionary<string, ListItemModel> myItemsLookup { get; set; } = new Dictionary<string, ListItemModel>();
+    private Dictionary<string, CompareListItemModel> comparingItemsLookup { get; set; } = new Dictionary<string, CompareListItemModel>();
 
     private string GetNameListsClassNames(bool isGirl)
     {
-        var hasAny = myItems.Any(i => i.IsGirl == isGirl);
+        var hasAny = myItemsLookup.Values.Any(i => i.IsGirl == isGirl);
         if (hasAny)
         {
             return HasComparisons(isGirl)
@@ -76,22 +74,36 @@
         return "u--flexcentered";
     }
 
-    private string GetListIcon(ListItemModel item) => comparingItems.Any(i => i.Name == item.Name)
+    private string GetListIcon(ListItemModel item) => comparingItemsLookup.ContainsKey(item.Name)
         ? "😍"
         : string.Empty;
 
-    private bool HasComparisons(bool isGirl) => comparingItems.Any(i => i.IsGirl == isGirl);
+    private bool HasComparisons(bool isGirl) => comparingItemsLookup.Values.Any(i => i.IsGirl == isGirl);
 
     private void AddItem(ListItemModel model)
     {
-        myItems.Add(model);
+        if (myItemsLookup.ContainsKey(model.Name))
+        {
+            return;
+        }
+        myItemsLookup.Add(model.Name, model);
         StateHasChanged();
     }
+
+    private List<ListItemModel> GetMyItems() => myItemsLookup.Values
+        .OrderByDescending(i => comparingItemsLookup.ContainsKey(i.Name))
+        .ThenBy(i => i.Name, StringComparer.CurrentCulture)
+        .ToList();
+    
+    private List<CompareListItemModel> GetComparingItems() => comparingItemsLookup.Values
+        .OrderByDescending(i => myItemsLookup.ContainsKey(i.Name))
+        .ThenBy(i => i.Name, StringComparer.CurrentCulture)
+        .ToList();
 
     private async Task OnRemove(IListItemModel item)
     {
         var actualItem = (ListItemModel)item;
-        myItems.Remove(actualItem);
+        myItemsLookup.Remove(actualItem.Name);
         await ListClient.RemoveItem(actualItem.ListIdentifier, actualItem.Id);
         StateHasChanged();
     }
@@ -99,7 +111,7 @@
     protected async override Task OnParametersSetAsync()
     {
         await localStorage.SetItemAsync(Constants.CompareIdLocalStorageKey, CompareId);
-        myItems = (await ListClient.GetList(ListId)).OrderBy(i => i.Name).ToList();
-        comparingItems = (await ListClient.GetListForComparing(CompareId)).OrderBy(i => i.Name).ToList();
+        myItemsLookup = (await ListClient.GetList(ListId)).ToDictionary(i => i.Name);
+        comparingItemsLookup = (await ListClient.GetListForComparing(CompareId)).ToDictionary(i => i.Name);
     }
 }

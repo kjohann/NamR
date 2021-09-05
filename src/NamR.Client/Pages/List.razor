@@ -58,6 +58,10 @@
 
     private void AddItem(ListItemModel model)
     {
+        if (items.Any(i => i.Name == model.Name))
+        {
+            return;
+        }
         items.Add(model);
         StateHasChanged();
     }

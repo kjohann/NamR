@@ -32,6 +32,10 @@ namespace NamR.Server.Data
 
         public async Task<ListItem> AddItem(ListItem item)
         {
+            if (ListItems.Any(i => i.ListIdentifier == item.ListIdentifier && i.Name == item.Name))
+            {
+                return ListItems.First(i => i.ListIdentifier == item.ListIdentifier && i.Name == item.Name);
+            }
             item.CompareListIdentifier = await GetCompareIdentifier(item.ListIdentifier);
             var res = await ListItems.AddAsync(item);
 
