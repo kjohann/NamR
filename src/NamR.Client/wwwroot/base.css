@@ -24,17 +24,17 @@ body, html {
 @keyframes sk-rotateplane {
     0% {
         transform: perspective(120px) rotateX(0deg) rotateY(0deg);
-        background-color: red;
+        background-color: #f1f1f5;
     }
 
     50% {
         transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
-        background-color: green;
+        background-color: #fafafa;
     }
 
     100% {
         transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg);
-        background-color: blue;
+        background-color: #33333315;
     }
 }
 
