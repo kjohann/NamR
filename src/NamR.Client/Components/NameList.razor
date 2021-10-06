@@ -20,7 +20,7 @@
                     @item.Name
                     @if(RemoveOnClick != null)
                     {
-                        <button aria-label="Fjern" class="NameList-RemoveButton" @onclick="@(async () => await RemoveOnClick(item))"/>                        
+                        <button aria-label="Fjern" class="NameList-RemoveButton" @onclick="@(async () => await RemoveOnClick(item))">X</button>                        
                     }
                 </li>
             }

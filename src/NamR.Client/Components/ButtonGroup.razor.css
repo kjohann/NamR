@@ -3,6 +3,22 @@
     width: 100%;
 }
 
+::deep .ButtonGroup-button {
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #33333315;
+    position: relative;
+    border: 1px solid #3333334f;
+    text-align: center;
+    font-size: 1.3rem;
+    cursor: pointer;
+    flex-basis: 50%;
+}
+
+::deep .ButtonGroup-button:hover {
+    background-color: #fafafa
+}
+
 ::deep .ButtonGroup-button:first-of-type {
     border-radius: 5px 0 0 5px;
 }

@@ -24,12 +24,12 @@ body, html {
 @keyframes sk-rotateplane {
     0% {
         transform: perspective(120px) rotateX(0deg) rotateY(0deg);
-        background-color: #f1f1f5;
+        background-color: #161618;
     }
 
     50% {
         transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg);
-        background-color: #fafafa;
+        background-color: #797979;
     }
 
     100% {
@@ -60,22 +60,6 @@ a {
 a:hover {
     color: #c1c1c1;
     border-color: #c1c1c1;
-}
-
-button {
-    padding: 10px;
-    border-radius: 5px;
-    background-color: #33333315;
-    position: relative;
-    border: 1px solid #3333334f;
-    text-align: center;
-    font-size: 1.3rem;
-    cursor: pointer;
-    flex-basis: 50%;
-}
-
-button:hover {
-    background-color: #fafafa
 }
 
 input[type=text] {
