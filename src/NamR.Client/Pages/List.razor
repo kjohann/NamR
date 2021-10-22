@@ -16,14 +16,14 @@
     <NamR.Client.Components.NameList
         TListModel=ListItemModel
         IsGirl="@true"
-        Items="@items"
+        Items="@(items.OrderBy(i => i.Name, StringComparer.CurrentCulture).ToList())"
         Title="Jentenavn"
         RemoveOnClick="@OnRemove"
     />
     <NamR.Client.Components.NameList
         TListModel=ListItemModel
         IsGirl="@false"
-        Items="@items"
+        Items="@(items.OrderBy(i => i.Name, StringComparer.CurrentCulture).ToList())"
         Title="Guttenavn"
         RemoveOnClick="@OnRemove"
     />
