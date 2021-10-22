@@ -17,14 +17,29 @@
 }
 
 .NameList li {
-    display: flex;
-    justify-content: space-between;
     padding: 10px 30px 10px 10px;
     box-shadow: 0 5px 7px -1px rgb(51 51 51 / 23%);
     border-radius: 10px;
     background-color: #fafafa;
     margin-bottom: 0.5rem;
     position: relative;
+}
+
+.NameList li:hover {
+    border-radius: 11px;
+    background-color: #f5f5f5;
+}
+
+.NameList li > a {
+    display: flex;
+    justify-content: space-between;
+    border: none;
+    font-size: inherit;
+    color: inherit;
+}
+
+.NameList li > a:hover {
+    color: inherit;
 }
 
 .NameList li.NameList--faded {
