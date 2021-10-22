@@ -3,6 +3,7 @@ using System.Data.Common;
 
 namespace NamR.Server
 {
+    // thank you: https://stackoverflow.com/questions/51602947/using-entity-framework-asp-net-mvc-core-and-postgresql-with-heroku
     public class PostgreSqlConnectionStringBuilder : DbConnectionStringBuilder
     {
         private string _database;
