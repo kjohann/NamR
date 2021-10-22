@@ -37,6 +37,7 @@
 
 .NameList-RemoveButton {
     padding: 0 10px;
+    margin-right: -30px;
     background: none;
     border: none;
     font-size: inherit;
